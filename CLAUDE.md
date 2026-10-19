@@ -30,3 +30,10 @@ For overlays with transparency, render from Remotion with `--codec=prores --pror
 - `cdn.jsdelivr.net` may be blocked by the environment's network policy, so HyperFrames compositions load GSAP from `hyperframes/vendor/gsap.min.js`, not the CDN. Keep new compositions on the local copy.
 - Remotion cannot download its browser here; `remotion/remotion.config.ts` uses the preinstalled headless shell when it exists.
 - Remotion is free for individuals and teams of up to 3; larger companies need a license (remotion.pro/license).
+
+## Research (Last30Days + Firecrawl)
+
+- `last30days` skill lives in `.claude/skills/last30days`. Sources used here: Reddit, Hacker News, Polymarket, GitHub, YouTube (yt-dlp from `scripts/session-setup.sh`).
+- X/Twitter is deliberately off: no browser cookies, no X API keys. Run research with `--no-browser-cookies` and don't offer X setup.
+- Firecrawl comes from the user's claude.ai connector (`https://mcp.firecrawl.dev/v2/mcp-oauth`), not from a local MCP config.
+- These need the environment's network access set to Full (or the source hosts allowed).
