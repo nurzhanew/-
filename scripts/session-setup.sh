@@ -8,3 +8,6 @@ npx -y hyperframes@0.8.175 browser ensure
 
 # Last30Days: YouTube search/transcripts. X is intentionally not configured.
 python3 -m pip install --user --quiet --upgrade yt-dlp
+
+# Motion Director audio tools
+python3 -m pip install --user --quiet --break-system-packages -r .claude/skills/motion-director/scripts/requirements.txt

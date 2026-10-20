@@ -50,3 +50,9 @@ For overlays with transparency, render from Remotion with `--codec=prores --pror
 - Curated skills from OpenDesign live in `.claude/skills/`: motion (`motion-design`, `ui-animation`, `emilkowalski-motion`, `review-animations`, `vfx-text-cursor`, `chat-motion-overlay`, `frame-*` video frames), brand/marketing (`creative-director`, `ad-creative`, `copywriting`, `marketing-psychology`, `brand-*`, `brandkit`, `color-expert`) and design (`design-brief`, `design-review`, `taste-skill`, `poster-hero`, `screenshots-marketing`).
 - `design-systems/<brand>/` holds 151 brand packages (`DESIGN.md` prose + `tokens.css`). When asked for a video or page "in the style of" a brand, read that folder's `DESIGN.md` and use its tokens.
 - The OpenDesign app and its `od` daemon are not installed here. Where a skill says to run `od media ...`, render with HyperFrames or Remotion in this repo instead.
+
+## Motion Director (abdullatif06/claude-motion-director@07c162e)
+
+- Skill in `.claude/skills/motion-director`: a director process on top of HyperFrames (brief → LOOK card → beat grid → approved shot list → scenes → scored critique loop → 9:16/1:1/16:9 delivery).
+- New film: `bash .claude/skills/motion-director/scripts/new-project.sh <name>` (pins HyperFrames 0.8.86 and vendors GSAP locally). Smoke test passed in the cloud session.
+- Python deps (numpy, scipy, matplotlib) are installed by `scripts/session-setup.sh`.
