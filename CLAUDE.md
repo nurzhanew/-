@@ -56,3 +56,9 @@ For overlays with transparency, render from Remotion with `--codec=prores --pror
 - Skill in `.claude/skills/motion-director`: a director process on top of HyperFrames (brief → LOOK card → beat grid → approved shot list → scenes → scored critique loop → 9:16/1:1/16:9 delivery).
 - New film: `bash .claude/skills/motion-director/scripts/new-project.sh <name>` (pins HyperFrames 0.8.86 and vendors GSAP locally). Smoke test passed in the cloud session.
 - Python deps (numpy, scipy, matplotlib) are installed by `scripts/session-setup.sh`.
+
+## Synapsea web skills (ShyDamn/synapsea-web-skills@eb32b9c)
+
+- Website pipeline skills in `.claude/skills/`: `website-build-workflow` (orchestrator), `design-foundations`, `web-motion-design`, `site-polish-qa`, `build-playbooks`, `seo-aeo`, `backend-integration`, `asset-generation`, `security-hardening`.
+- `web-motion-design` is Synapsea's `motion-design`, renamed so it doesn't clash with OpenDesign's video `motion-design`.
+- Always-on site rules: `.claude/rules/synapsea-website-quality.md` (website/frontend work only). Review subagent: `.claude/agents/design-reviewer.md`.
