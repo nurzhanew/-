@@ -15,7 +15,7 @@ If a brief is missing, generate a reasonable one and state assumptions explicitl
 
 Output of this phase: a one-paragraph brief + 3-word vibe. Everything downstream derives from it.
 
-Run the capability-check protocol from `asset-generation` (inventory MCPs/keys per docs/TOOLING.md, report gaps + fallbacks to the user in one message). Then map the brief to an archetype via the `build-playbooks` skill (restaurant / agency / portfolio / saas / ecommerce). The playbook overrides the generic phase plan below with its vertical-specific section structure, phase count, stack choices, and conversion patterns.
+Run the capability-check protocol from `asset-generation` (inventory MCPs/keys per asset-generation/TOOLING.md, report gaps + fallbacks to the user in one message). Then map the brief to an archetype via the `build-playbooks` skill (restaurant / agency / portfolio / saas / ecommerce). The playbook overrides the generic phase plan below with its vertical-specific section structure, phase count, stack choices, and conversion patterns.
 
 ## Phase 1 — Design tokens (read skill: design-foundations)
 

@@ -1,5 +1,5 @@
 ---
-name: web-web-motion-design
+name: web-motion-design
 description: Use when adding any animation, transition, scroll effect, hover state, page transition, or "make it feel alive/cinematic" request — and when choosing between GSAP, Framer Motion, Anime.js, Motion One, or plain CSS. Covers easing/duration recipes, scroll experiences (Lenis, ScrollTrigger, Intersection Observer), signature interactions, and motion restraint. Read before writing any animation code.
 ---
 
