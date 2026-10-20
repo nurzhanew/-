@@ -44,3 +44,9 @@ For overlays with transparency, render from Remotion with `--codec=prores --pror
 - X/Twitter is deliberately off: no browser cookies, no X API keys. Run research with `--no-browser-cookies` and don't offer X setup.
 - Firecrawl comes from the user's claude.ai connector (`https://mcp.firecrawl.dev/v2/mcp-oauth`), not from a local MCP config.
 - These need the environment's network access set to Full (or the source hosts allowed).
+
+## OpenDesign (nexu-io/open-design@7133326)
+
+- Curated skills from OpenDesign live in `.claude/skills/`: motion (`motion-design`, `ui-animation`, `emilkowalski-motion`, `review-animations`, `vfx-text-cursor`, `chat-motion-overlay`, `frame-*` video frames), brand/marketing (`creative-director`, `ad-creative`, `copywriting`, `marketing-psychology`, `brand-*`, `brandkit`, `color-expert`) and design (`design-brief`, `design-review`, `taste-skill`, `poster-hero`, `screenshots-marketing`).
+- `design-systems/<brand>/` holds 151 brand packages (`DESIGN.md` prose + `tokens.css`). When asked for a video or page "in the style of" a brand, read that folder's `DESIGN.md` and use its tokens.
+- The OpenDesign app and its `od` daemon are not installed here. Where a skill says to run `od media ...`, render with HyperFrames or Remotion in this repo instead.
