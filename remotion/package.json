@@ -31,7 +31,7 @@
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
     "render:hf": "remotion render HelloWorld ../hyperframes/assets/remotion-intro.mp4",
-    "render:reels": "remotion render HookOverlay ../hyperframes/assets/overlays/hook.webm --codec=vp9 --image-format=png --pixel-format=yuva420p && remotion render CtaOverlay ../hyperframes/assets/overlays/cta.webm --codec=vp9 --image-format=png --pixel-format=yuva420p"
+    "render:reels": "remotion render HookOverlay ../hyperframes/assets/overlays/hook.webm --codec=vp9 --image-format=png --pixel-format=yuva420p && remotion render CtaOverlay ../hyperframes/assets/overlays/cta.webm --codec=vp9 --image-format=png --pixel-format=yuva420p && remotion render KineticIntro ../hyperframes/assets/overlays/kinetic-intro.webm --codec=vp9 --image-format=png --pixel-format=yuva420p && remotion render KineticWheel ../hyperframes/assets/overlays/kinetic-wheel.webm --codec=vp9 --image-format=png --pixel-format=yuva420p && remotion render HudIntro ../hyperframes/assets/overlays/hud-intro.webm --codec=vp9 --image-format=png --pixel-format=yuva420p && remotion render HudCta ../hyperframes/assets/overlays/hud-cta.webm --codec=vp9 --image-format=png --pixel-format=yuva420p"
   },
   "allowScripts": {
     "esbuild": false

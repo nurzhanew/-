@@ -25,6 +25,13 @@ Add more Remotion clips the same way: one `npx remotion render <Composition> ../
 per clip, then one `<video>` with `id`, `data-start`, `data-duration` and `data-track-index` in `index.html`.
 For overlays with transparency, render from Remotion with `--codec=prores --prores-profile=4444` or as WebM (VP9) with an alpha channel.
 
+## ACADEMY reel variants
+
+- `hyperframes/` — overlay cards version; `hyperframes-kinetic/` — kinetic typography; `hyperframes-hud/` — tech HUD.
+- The variant projects symlink `assets/` and `vendor/` to `hyperframes/`, so footage, music, SFX and Remotion overlays live in one place.
+- `cd remotion && npm run render:reels` re-renders every Remotion overlay; then `npm run render` inside a variant project.
+- One root composition per project: HyperFrames rejects two root HTML files in the same folder.
+
 ## Cloud session notes
 
 - `cdn.jsdelivr.net` may be blocked by the environment's network policy, so HyperFrames compositions load GSAP from `hyperframes/vendor/gsap.min.js`, not the CDN. Keep new compositions on the local copy.

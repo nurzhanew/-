@@ -4,6 +4,10 @@ import { Logo } from "./HelloWorld/Logo";
 import { Title } from "./HelloWorld/Title";
 import { CtaOverlay } from "./reels/CtaOverlay";
 import { HookOverlay } from "./reels/HookOverlay";
+import { HudCta } from "./reels/hud/HudCta";
+import { HudIntro } from "./reels/hud/HudIntro";
+import { KineticIntro } from "./reels/kinetic/KineticIntro";
+import { KineticWheel } from "./reels/kinetic/KineticWheel";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -70,6 +74,10 @@ export const RemotionRoot: React.FC = () => {
           width={1080}
           height={1920}
         />
+        <Composition id="KineticIntro" component={KineticIntro} durationInFrames={66} fps={30} width={1080} height={1920} />
+        <Composition id="KineticWheel" component={KineticWheel} durationInFrames={88} fps={30} width={1080} height={1920} />
+        <Composition id="HudIntro" component={HudIntro} durationInFrames={72} fps={30} width={1080} height={1920} />
+        <Composition id="HudCta" component={HudCta} durationInFrames={132} fps={30} width={1080} height={1920} />
       </Folder>
     </>
   );
