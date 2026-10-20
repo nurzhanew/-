@@ -10,6 +10,7 @@
   "private": true,
   "dependencies": {
     "@remotion/cli": "4.0.537",
+    "@remotion/fonts": "^4.0.537",
     "@remotion/zod-types": "4.0.537",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -29,7 +30,8 @@
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
-    "render:hf": "remotion render HelloWorld ../hyperframes/assets/remotion-intro.mp4"
+    "render:hf": "remotion render HelloWorld ../hyperframes/assets/remotion-intro.mp4",
+    "render:reels": "remotion render HookOverlay ../hyperframes/assets/overlays/hook.webm --codec=vp9 --image-format=png --pixel-format=yuva420p && remotion render CtaOverlay ../hyperframes/assets/overlays/cta.webm --codec=vp9 --image-format=png --pixel-format=yuva420p"
   },
   "allowScripts": {
     "esbuild": false

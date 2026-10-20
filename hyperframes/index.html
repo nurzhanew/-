@@ -1,71 +1,276 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1920, height=1080" />
+    <meta name="viewport" content="width=1080, height=1920" />
     <script src="vendor/gsap.min.js"></script>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      @font-face { font-family: "Montserrat"; font-weight: 600; src: url("assets/fonts/montserrat-600-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+      @font-face { font-family: "Montserrat"; font-weight: 600; src: url("assets/fonts/montserrat-600-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Montserrat"; font-weight: 800; src: url("assets/fonts/montserrat-800-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+      @font-face { font-family: "Montserrat"; font-weight: 800; src: url("assets/fonts/montserrat-800-latin.woff2") format("woff2"); }
+      @font-face { font-family: "Montserrat"; font-weight: 900; src: url("assets/fonts/montserrat-900-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+      @font-face { font-family: "Montserrat"; font-weight: 900; src: url("assets/fonts/montserrat-900-latin.woff2") format("woff2"); }
+
+      :root {
+        --ink: #0b0b0f;
+        --white: #ffffff;
+        --accent: #ffd400;
+        --danger: #ff3b30;
+        --success: #34c759;
       }
-      html,
-      body {
-        margin: 0;
-        width: 1920px;
-        height: 1080px;
-        overflow: hidden;
-        background: #0a0a0a;
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Montserrat", sans-serif; }
+
+      .footage { position: absolute; inset: 0; overflow: hidden; }
+      .footage .inner { position: absolute; inset: 0; transform-origin: 50% 38%; }
+      .footage video { width: 100%; height: 100%; object-fit: cover; }
+
+      .overlay-video { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+      /* Overlay cards live in the top band, above faces and the burned-in captions. */
+      .band { position: absolute; left: 0; right: 0; top: 190px; display: flex; flex-direction: column; align-items: center; }
+      .card {
+        display: flex; align-items: center; gap: 22px;
+        background: rgba(11, 11, 15, 0.84);
+        border: 2px solid rgba(255, 255, 255, 0.12);
+        border-radius: 30px; padding: 24px 34px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+        color: var(--white); font-weight: 800; font-size: 54px; line-height: 1.1;
       }
-      #root {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-      }
-      #remotion-intro {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-      }
-      #title {
-        color: #f4f4f5;
-        font-size: 72px;
-        font-weight: 600;
-        letter-spacing: -0.03em;
-      }
+      .tag { display: inline-block; font-weight: 900; font-size: 38px; letter-spacing: 1px; padding: 8px 20px; border-radius: 12px; color: var(--ink); background: var(--accent); margin-bottom: 16px; }
+      .tag.red { background: var(--danger); color: var(--white); }
+      .tag.green { background: var(--success); color: var(--white); }
+      .hl { color: var(--accent); }
+      .strike { position: relative; color: rgba(255, 255, 255, 0.7); }
+      .strike::after { content: ""; position: absolute; left: -6px; right: -6px; top: 52%; height: 8px; border-radius: 4px; background: var(--danger); transform-origin: left center; transform: scaleX(var(--s, 0)); }
+
+      .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+
+      /* Money */
+      .bill { position: absolute; width: 150px; height: 74px; border-radius: 10px; background: linear-gradient(135deg, #3ddc84, #1e9e5a); border: 4px solid #c9f7dc; display: flex; align-items: center; justify-content: center; }
+      .bill::before { content: ""; width: 40px; height: 40px; border-radius: 50%; border: 5px solid #c9f7dc; }
+
+      /* Progress / spinner */
+      .spinner { width: 64px; height: 64px; border-radius: 50%; border: 9px solid rgba(255, 255, 255, 0.2); border-top-color: var(--accent); flex-shrink: 0; }
+      .progress { width: 520px; height: 18px; border-radius: 9px; background: rgba(255, 255, 255, 0.15); overflow: hidden; margin-top: 14px; }
+      .progress i { display: block; height: 100%; width: 37%; background: var(--accent); transform-origin: left center; }
+
+      /* Checklist */
+      .check { display: flex; align-items: center; gap: 22px; margin-top: 18px; }
+      .tick { width: 70px; height: 70px; border-radius: 50%; background: var(--success); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+      /* Diagnostics scan */
+      .scanline { position: absolute; left: 0; right: 0; height: 10px; top: 0; background: var(--accent); box-shadow: 0 0 40px 12px rgba(255, 212, 0, 0.55); opacity: 0.85; }
+      .scan-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255, 212, 0, 0.12) 2px, transparent 2px), linear-gradient(90deg, rgba(255, 212, 0, 0.12) 2px, transparent 2px); background-size: 90px 90px; opacity: 0; }
     </style>
   </head>
   <body>
-    <div
-      id="root"
-      data-composition-id="main"
-      data-start="0"
-      data-duration="8"
-      data-width="1920"
-      data-height="1080"
-    >
-      <!-- Rendered by Remotion: cd ../remotion && npm run render:hf -->
-      <video
-        id="remotion-intro"
-        src="assets/remotion-intro.mp4"
-        data-start="0"
-        data-duration="5"
-        data-track-index="0"
-        playsinline
-        muted
-      ></video>
-      <h1 id="title" class="clip" data-start="5" data-duration="3" data-track-index="1">
-        Remotion + HyperFrames
-      </h1>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="24.94" data-width="1080" data-height="1920">
+
+      <!-- Footage: part 2 is cut just before its repeated last word, part 3 continues the same shot. -->
+      <div class="footage" id="shot-a">
+        <div class="inner">
+          <video id="part2" src="assets/footage/part2.mp4" data-start="0" data-duration="10.38" data-track-index="1" playsinline data-has-audio="true" data-volume="1.4"></video>
+        </div>
+      </div>
+      <div class="footage" id="shot-b">
+        <div class="inner">
+          <video id="part3" src="assets/footage/part3.mp4" data-start="10.38" data-duration="14.56" data-track-index="2" playsinline data-has-audio="true" data-volume="1.4"></video>
+        </div>
+      </div>
+
+      <!-- Diagnostics scan over the motherboard shot -->
+      <div class="clip" id="scan" data-start="16.26" data-duration="2.1" data-track-index="3" style="position:absolute;inset:0;">
+        <div class="scan-grid"></div>
+        <div class="scanline"></div>
+      </div>
+
+      <!-- Cut flashes -->
+      <div class="clip" id="flashes" data-start="0" data-duration="24.94" data-track-index="4" style="position:absolute;inset:0;pointer-events:none;">
+        <div class="flash"></div>
+      </div>
+
+      <!-- Remotion overlays (transparent WebM) -->
+      <video id="hook" class="overlay-video" src="assets/overlays/hook.webm" data-start="0" data-duration="2.6" data-track-index="5" playsinline muted></video>
+      <video id="cta" class="overlay-video" src="assets/overlays/cta.webm" data-start="20.54" data-duration="4.4" data-track-index="5" playsinline muted></video>
+
+      <!-- HyperFrames overlays -->
+      <div class="clip" id="money" data-start="2.62" data-duration="1.7" data-track-index="6" style="position:absolute;inset:0;">
+        <div class="band">
+          <div class="tag red">ВЫБРАСЫВАЕШЬ</div>
+          <div class="card" style="font-size:66px;font-weight:900;">ДЕНЬГИ</div>
+        </div>
+        <div class="bill" style="left:120px;top:420px;"></div>
+        <div class="bill" style="left:820px;top:380px;"></div>
+        <div class="bill" style="left:300px;top:300px;"></div>
+        <div class="bill" style="left:660px;top:470px;"></div>
+      </div>
+
+      <div class="clip" id="wheel" data-start="4.3" data-duration="2.95" data-track-index="6" style="position:absolute;inset:0;">
+        <div class="band">
+          <div class="tag">СПУСТИЛО КОЛЕСО?</div>
+          <div class="card">
+            <svg width="86" height="86" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#1c1c22" stroke="#fff" stroke-width="8"/><circle cx="50" cy="50" r="16" fill="#ffd400"/><g stroke="#fff" stroke-width="6"><line x1="50" y1="14" x2="50" y2="34"/><line x1="50" y1="66" x2="50" y2="86"/><line x1="14" y1="50" x2="34" y2="50"/><line x1="66" y1="50" x2="86" y2="50"/></g></svg>
+            <div>
+              <div><span class="strike" id="wheel-strike">новая машина</span></div>
+              <div class="hl" id="wheel-fix">→ просто ремонт</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="clip" id="slow" data-start="8.1" data-duration="1.4" data-track-index="6" style="position:absolute;inset:0;">
+        <div class="band">
+          <div class="card" style="flex-direction:column;align-items:flex-start;">
+            <div style="display:flex;align-items:center;gap:22px;"><div class="spinner"></div><div>Ноутбук тормозит…</div></div>
+            <div class="progress"><i></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="clip" id="printer" data-start="9.5" data-duration="1.9" data-track-index="6" style="position:absolute;inset:0;">
+        <div class="band">
+          <div class="tag red">ОШИБКА ПЕЧАТИ</div>
+          <div class="card">
+            <svg width="80" height="80" viewBox="0 0 100 100"><path d="M50 8 96 90H4Z" fill="#ff3b30"/><rect x="45" y="36" width="10" height="30" rx="5" fill="#fff"/><circle cx="50" cy="77" r="6" fill="#fff"/></svg>
+            <div>Принтер не печатает</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="clip" id="replace" data-start="11.3" data-duration="1.4" data-track-index="6" style="position:absolute;inset:0;">
+        <div class="band">
+          <div class="card" style="font-size:64px;font-weight:900;">Сразу <span class="strike" id="replace-strike" style="margin-left:18px;">менять?</span></div>
+        </div>
+      </div>
+
+      <div class="clip" id="fixes" data-start="13.9" data-duration="2.3" data-track-index="6" style="position:absolute;inset:0;">
+        <div class="band">
+          <div class="tag green">МОЖНО РЕШИТЬ</div>
+          <div class="card" style="flex-direction:column;align-items:flex-start;padding:16px 34px 30px;">
+            <div class="check" id="fix-1"><div class="tick"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Ремонтом</div>
+            <div class="check" id="fix-2"><div class="tick"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Заправкой картриджа</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="clip" id="cause" data-start="16.4" data-duration="1.95" data-track-index="7" style="position:absolute;inset:0;">
+        <div class="band">
+          <div class="tag">ДИАГНОСТИКА</div>
+          <div class="card">
+            <svg width="80" height="80" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5" stroke="#ffd400" stroke-width="2.6" fill="none"/><path d="m15 15 6 6" stroke="#ffd400" stroke-width="2.8" stroke-linecap="round"/></svg>
+            <div>Сначала — <span class="hl">найти причину</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="clip" id="save" data-start="18.5" data-duration="2.0" data-track-index="6" style="position:absolute;inset:0;">
+        <div class="band">
+          <div class="card" style="flex-direction:column;align-items:center;font-size:58px;">
+            <div>а не тратить деньги</div>
+            <div>на <span class="strike" id="save-strike">новую технику</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sound: music bed + effects. Music credit: "Uplifting Corporate" by Soundrider/Dope (Jamendo), CC BY. -->
+      <audio id="music" src="assets/music/uplifting-corporate.mp3" data-start="0" data-duration="24.94" data-media-start="27.6" data-track-index="10" data-volume="1"
+        data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0.16},{"t":0.6,"v":0.075},{"t":23.4,"v":0.075},{"t":24.94,"v":0}]}]}'></audio>
+
+      <audio id="sfx-impact" src="assets/sfx/impact-short.wav" data-start="0" data-duration="0.9" data-track-index="11" data-volume="0.22"></audio>
+      <audio id="sfx-coin-1" src="assets/sfx/coin.wav" data-start="2.7" data-duration="0.9" data-track-index="12" data-volume="0.5"></audio>
+      <audio id="sfx-coin-2" src="assets/sfx/coin.wav" data-start="3.3" data-duration="0.9" data-track-index="13" data-volume="0.4"></audio>
+      <audio id="sfx-pop-wheel" src="assets/sfx/pop.mp3" data-start="4.2" data-duration="0.7" data-track-index="12" data-volume="0.5"></audio>
+      <audio id="sfx-pop-fix" src="assets/sfx/pop.mp3" data-start="6.18" data-duration="0.7" data-track-index="12" data-volume="0.45"></audio>
+      <audio id="sfx-whoosh-1" src="assets/sfx/whoosh.mp3" data-start="7.26" data-duration="0.57" data-track-index="14" data-volume="0.5"></audio>
+      <audio id="sfx-pop-slow" src="assets/sfx/pop.mp3" data-start="8.0" data-duration="0.7" data-track-index="12" data-volume="0.45"></audio>
+      <audio id="sfx-error" src="assets/sfx/error.mp3" data-start="8.92" data-duration="1.6" data-track-index="13" data-volume="0.4"></audio>
+      <audio id="sfx-pop-replace" src="assets/sfx/pop.mp3" data-start="11.2" data-duration="0.7" data-track-index="12" data-volume="0.45"></audio>
+      <audio id="sfx-whoosh-2" src="assets/sfx/whoosh.mp3" data-start="12.56" data-duration="0.57" data-track-index="14" data-volume="0.5"></audio>
+      <audio id="sfx-chime-1" src="assets/sfx/chime.mp3" data-start="13.62" data-duration="1.4" data-track-index="13" data-volume="0.35"></audio>
+      <audio id="sfx-chime-2" src="assets/sfx/chime.mp3" data-start="14.4" data-duration="1.4" data-track-index="12" data-volume="0.35"></audio>
+      <audio id="sfx-whoosh-3" src="assets/sfx/whoosh.mp3" data-start="16.1" data-duration="0.57" data-track-index="14" data-volume="0.5"></audio>
+      <audio id="sfx-whoosh-4" src="assets/sfx/whoosh.mp3" data-start="18.18" data-duration="0.57" data-track-index="14" data-volume="0.45"></audio>
+      <audio id="sfx-pop-save" src="assets/sfx/pop.mp3" data-start="18.4" data-duration="0.7" data-track-index="12" data-volume="0.45"></audio>
+      <audio id="sfx-whoosh-5" src="assets/sfx/whoosh.mp3" data-start="20.42" data-duration="0.57" data-track-index="14" data-volume="0.5"></audio>
+      <audio id="sfx-typing" src="assets/sfx/typing.mp3" data-start="20.55" data-duration="1.3" data-track-index="13" data-volume="0.45"></audio>
+      <audio id="sfx-send" src="assets/sfx/pop.mp3" data-start="21.88" data-duration="0.7" data-track-index="12" data-volume="0.55"></audio>
+      <audio id="sfx-heart" src="assets/sfx/chime.mp3" data-start="21.6" data-duration="2.0" data-track-index="15" data-volume="0.35"></audio>
     </div>
+
     <script>
       const tl = gsap.timeline({ paused: true });
-      tl.fromTo("#title", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6 }, 5);
+      const pop = { duration: 0.45, ease: "back.out(2.2)" };
+
+      // Punch-ins on the talking head and a slow push on the closing shot.
+      tl.fromTo("#shot-a .inner", { scale: 1 }, { scale: 1.12, duration: 0.18, ease: "power2.out" }, 2.76);
+      tl.to("#shot-a .inner", { scale: 1, duration: 0.3, ease: "power2.inOut" }, 4.1);
+      tl.fromTo("#shot-a .inner", { scale: 1 }, { scale: 1.08, duration: 0.18, ease: "power2.out" }, 6.24);
+      tl.to("#shot-a .inner", { scale: 1, duration: 0.2 }, 7.4);
+      tl.fromTo("#shot-b .inner", { scale: 1 }, { scale: 1.1, duration: 0.2, ease: "power2.out" }, 11.4);
+      tl.to("#shot-b .inner", { scale: 1, duration: 0.2 }, 12.7);
+      tl.fromTo("#shot-b .inner", { scale: 1 }, { scale: 1.07, duration: 4.4, ease: "none" }, 20.58);
+
+      // White flashes on the hard cuts.
+      [7.42, 12.72, 16.26, 18.34, 20.58].forEach((t) => {
+        tl.fromTo("#flashes .flash", { opacity: 0.55 }, { opacity: 0, duration: 0.22, ease: "power2.out", immediateRender: false }, t);
+      });
+
+      // Money
+      tl.from("#money .tag", { y: -40, opacity: 0, ...pop }, 2.62);
+      tl.from("#money .card", { scale: 0.6, opacity: 0, ...pop }, 2.68);
+      tl.fromTo("#money .bill", { y: -260, rotation: -30, opacity: 0 }, { y: 520, rotation: 40, opacity: 1, duration: 1.5, ease: "power1.in", stagger: 0.08 }, 2.7);
+      tl.to("#money .band", { opacity: 0, y: -40, duration: 0.2 }, 4.1);
+
+      // Wheel analogy
+      tl.from("#wheel .tag", { y: -40, opacity: 0, ...pop }, 4.3);
+      tl.from("#wheel .card", { x: -700, duration: 0.5, ease: "power3.out" }, 4.36);
+      tl.from("#wheel svg", { rotation: -360, duration: 0.8, ease: "power2.out" }, 4.36);
+      tl.fromTo("#wheel-strike", { "--s": 0 }, { "--s": 1, duration: 0.3, ease: "power2.out" }, 6.24);
+      tl.from("#wheel-fix", { opacity: 0, x: -30, duration: 0.3 }, 6.4);
+      tl.to("#wheel .band", { opacity: 0, y: -40, duration: 0.2 }, 7.05);
+
+      // Slow laptop
+      tl.from("#slow .card", { y: -60, opacity: 0, ...pop }, 8.1);
+      tl.fromTo("#slow .spinner", { rotation: 0 }, { rotation: 720, duration: 1.4, ease: "none" }, 8.1);
+      tl.fromTo("#slow .progress i", { scaleX: 0.2 }, { scaleX: 1, duration: 0.6, ease: "power2.out" }, 8.2);
+      tl.to("#slow .band", { opacity: 0, duration: 0.15 }, 9.35);
+
+      // Printer error
+      tl.from("#printer .tag", { scale: 0.4, opacity: 0, ...pop }, 9.5);
+      tl.from("#printer .card", { y: -40, opacity: 0, ...pop }, 9.56);
+      tl.to("#printer .card", { keyframes: { x: [0, -16, 14, -10, 6, 0] }, duration: 0.4 }, 9.9);
+      tl.to("#printer .band", { opacity: 0, y: -40, duration: 0.2 }, 11.2);
+
+      // Replace straight away?
+      tl.from("#replace .card", { scale: 0.6, opacity: 0, ...pop }, 11.3);
+      tl.fromTo("#replace-strike", { "--s": 0 }, { "--s": 1, duration: 0.25, ease: "power2.out" }, 11.9);
+      tl.to("#replace .band", { opacity: 0, y: -40, duration: 0.2 }, 12.5);
+
+      // Fixes checklist
+      tl.from("#fixes .tag", { y: -40, opacity: 0, ...pop }, 13.9);
+      tl.from("#fixes .card", { scaleY: 0, transformOrigin: "50% 0%", duration: 0.35, ease: "power3.out" }, 13.95);
+      tl.from("#fix-1", { x: -80, opacity: 0, ...pop }, 14.04);
+      tl.from("#fix-1 .tick", { scale: 0, ...pop }, 14.1);
+      tl.from("#fix-2", { x: -80, opacity: 0, ...pop }, 14.82);
+      tl.from("#fix-2 .tick", { scale: 0, ...pop }, 14.88);
+      tl.to("#fixes .band", { opacity: 0, y: -40, duration: 0.2 }, 16.0);
+
+      // Diagnostics scan + cause
+      tl.fromTo("#scan .scan-grid", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 16.26);
+      tl.fromTo("#scan .scanline", { y: 0 }, { y: 1910, duration: 1.8, ease: "sine.inOut" }, 16.26);
+      tl.to("#scan .scan-grid", { opacity: 0, duration: 0.3 }, 18.0);
+      tl.from("#cause .tag", { y: -40, opacity: 0, ...pop }, 16.4);
+      tl.from("#cause .card", { scale: 0.6, opacity: 0, ...pop }, 16.48);
+      tl.to("#cause .band", { opacity: 0, y: -40, duration: 0.2 }, 18.15);
+
+      // Don't spend on new hardware
+      tl.from("#save .card", { y: -60, opacity: 0, ...pop }, 18.5);
+      tl.fromTo("#save-strike", { "--s": 0 }, { "--s": 1, duration: 0.3, ease: "power2.out" }, 19.5);
+      tl.to("#save .band", { opacity: 0, y: -40, duration: 0.2 }, 20.3);
+
       window.__timelines["main"] = tl;
       tl.seek(0);
     </script>

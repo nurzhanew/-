@@ -2,6 +2,8 @@ import { Composition, Folder } from "remotion";
 import { HelloWorld } from "./HelloWorld";
 import { Logo } from "./HelloWorld/Logo";
 import { Title } from "./HelloWorld/Title";
+import { CtaOverlay } from "./reels/CtaOverlay";
+import { HookOverlay } from "./reels/HookOverlay";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -51,6 +53,24 @@ export const RemotionRoot: React.FC = () => {
         }}
       />
 
+      <Folder name="Reels">
+        <Composition
+          id="HookOverlay"
+          component={HookOverlay}
+          durationInFrames={78}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+        <Composition
+          id="CtaOverlay"
+          component={CtaOverlay}
+          durationInFrames={132}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+      </Folder>
     </>
   );
 };
